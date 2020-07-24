@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import ListMovies from './ListMovies.js';
+import ListMovies from './ListMovies';
 
 /*
 Display a list of movies where each movie contains a list of users that favorited it.
@@ -99,6 +99,23 @@ const movies = {
 };
 
 class App extends Component {
+  
+  constructor(props){
+    super(props);
+    this.usersByMovieID = {};
+    
+    profiles.forEach(pro => {
+      const movieID = movies[pro.favoriteMovieID];
+      
+      if(!this.usersByMovieID[movieID]){
+        this.usersByMovieID[movieID] = [pro.userID];
+      } else if(this.usersByMovieID[movieID]){
+        this.usersByMovieID[movieID].push(pro.userID);
+      }
+      
+    });
+  }
+  
   render() {
     return (
       <div className="App">
@@ -107,7 +124,10 @@ class App extends Component {
           <h1 className="App-title">ReactND - Coding Practice</h1>
         </header>
         <h2>How Popular is Your Favorite Movie?</h2>
-		<ListMovies profiles={profiles} users={users} movies={movies}/>
+		<ListMovies
+			users={users} 
+			movies={movies} 
+			userByMovies={usersByMovieID} />
       </div>
     );
   }
